@@ -1,0 +1,57 @@
+{
+  "name": "timeline-organizer",
+  "version": "1.0.0",
+  "description": "별풍선/후원 로그 TXT 파일에서 BJ 언급 타임라인을 정리하는 Windows 데스크톱 앱",
+  "main": "out/main/main.js",
+  "author": "Codex",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "tsc --noEmit && electron-vite build",
+    "build:win": "tsc --noEmit && electron-vite build && electron-builder --win nsis --x64 --publish never",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron-updater": "^6.3.9",
+    "iconv-lite": "^0.6.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^2.3.0",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.21",
+    "vitest": "^2.1.8"
+  },
+  "build": {
+    "appId": "kr.timeline.organizer",
+    "productName": "타임라인 정리기",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "타임라인-정리기-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
