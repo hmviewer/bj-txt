@@ -1,0 +1,53 @@
+name: Release Windows App
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build Windows installer
+        run: pnpm run build:win
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: 타임라인 정리기 ${{ github.ref_name }}
+          body: |
+            Windows용 타임라인 정리기 릴리스입니다.
+
+            - 후원 로그 TXT 파일 로컬 분석
+            - BJ 이름/별칭/초성 검색 지원
+            - 기본 검색 범위: 따옴표 안 메시지 내용
+            - 전체 복사, TXT 저장, CSV 내보내기 지원
+            - Windows 10/11 x64 설치 파일 포함
+          files: |
+            release/*.exe
+            release/*.blockmap
