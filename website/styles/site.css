@@ -17,6 +17,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px;
 }
 
 body {
@@ -201,6 +202,7 @@ h3 {
 
 .section {
   padding: 92px clamp(20px, 4vw, 56px);
+  scroll-margin-top: 88px;
 }
 
 .sectionHeader {
@@ -271,17 +273,42 @@ h3 {
 }
 
 .download {
+  min-height: 360px;
   background: #101318;
+  align-items: stretch;
+}
+
+.downloadCopy {
+  align-self: center;
+  max-width: 860px;
+}
+
+.downloadCopy p {
+  max-width: 780px;
+  margin-bottom: 0;
 }
 
 .downloadActions {
   display: grid;
+  align-self: center;
   gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
 }
 
 .downloadActions .primaryAction,
 .downloadActions .secondaryAction {
   width: 100%;
+}
+
+.downloadLabel {
+  color: var(--gold);
+  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .releaseLink {
@@ -308,6 +335,10 @@ footer {
   .security,
   .download {
     grid-template-columns: 1fr;
+  }
+
+  .download {
+    min-height: auto;
   }
 
   .featureGrid {
