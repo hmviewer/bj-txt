@@ -1,4 +1,4 @@
-name: Release Windows App
+name: Release Desktop App
 
 on:
   push:
@@ -36,18 +36,77 @@ jobs:
       - name: Build Windows installer
         run: pnpm run build:win
 
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-release
+          path: |
+            release/*.exe
+            release/*.blockmap
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build macOS app
+        run: pnpm run build:mac
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-release
+          path: |
+            release/*.dmg
+            release/*.zip
+            release/*.blockmap
+
+  publish-release:
+    runs-on: ubuntu-latest
+    needs:
+      - build-windows
+      - build-macos
+
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: 타임라인 정리기 ${{ github.ref_name }}
           body: |
-            Windows용 타임라인 정리기 릴리스입니다.
+            Windows/macOS용 타임라인 정리기 릴리스입니다.
 
             - 후원 로그 TXT 파일 로컬 분석
             - BJ 이름/별칭/초성 검색 지원
             - 기본 검색 범위: 따옴표 안 메시지 내용
             - 전체 복사, TXT 저장, CSV 내보내기 지원
             - Windows 10/11 x64 설치 파일 포함
+            - macOS Apple Silicon DMG/ZIP 포함
+            - macOS 빌드는 서명/공증 전 배포본입니다.
           files: |
-            release/*.exe
-            release/*.blockmap
+            release-assets/**/*

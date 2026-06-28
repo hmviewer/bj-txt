@@ -1,7 +1,7 @@
 {
   "name": "timeline-organizer",
-  "version": "1.0.0",
-  "description": "별풍선/후원 로그 TXT 파일에서 BJ 언급 타임라인을 정리하는 Windows 데스크톱 앱",
+  "version": "1.0.1",
+  "description": "별풍선/후원 로그 TXT 파일에서 BJ 언급 타임라인을 정리하는 Windows/macOS 데스크톱 앱",
   "main": "out/main/main.js",
   "author": "Codex",
   "license": "MIT",
@@ -10,6 +10,7 @@
     "dev": "electron-vite dev",
     "build": "tsc --noEmit && electron-vite build",
     "build:win": "tsc --noEmit && electron-vite build && electron-builder --win nsis --x64 --publish never",
+    "build:mac": "tsc --noEmit && electron-vite build && electron-builder --mac dmg zip --arm64 --publish never",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -46,6 +47,20 @@
         "nsis"
       ],
       "artifactName": "타임라인-정리기-${version}-${arch}.${ext}"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.productivity",
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "artifactName": "타임라인-정리기-${version}-mac-${arch}.${ext}"
+    },
+    "dmg": {
+      "artifactName": "타임라인-정리기-${version}-mac-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
