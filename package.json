@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "electron-vite dev",
     "build": "tsc --noEmit && electron-vite build",
-    "build:win": "tsc --noEmit && electron-vite build && electron-builder --win nsis --x64",
+    "build:win": "tsc --noEmit && electron-vite build && electron-builder --win nsis --x64 --publish never",
     "test": "vitest run",
     "test:watch": "vitest"
   },
