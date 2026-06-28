@@ -114,7 +114,6 @@ website/
     og-preview.png
     favicon.svg
   styles/site.css
-  scripts/site.js
 ```
 
 로컬 확인:
@@ -138,4 +137,10 @@ python3 -m http.server 4177 --directory website
 - `Cross-Origin-Opener-Policy`
 - `Cross-Origin-Resource-Policy`
 
-Vercel에서 GitHub 저장소를 연결할 때 Root Directory를 `website`로 지정하거나, 루트 배포 시 포함된 `vercel.json`을 사용하면 됩니다. 설치 파일은 GitHub Release에 올리고 웹사이트 다운로드 버튼을 Release URL로 연결하는 방식을 권장합니다.
+Vercel에서 GitHub 저장소를 연결할 때 Root Directory를 `website`로 지정하거나, 루트 배포 시 포함된 `vercel.json`을 사용하면 됩니다. 설치 파일은 GitHub Release에 올리고 웹사이트 다운로드 버튼을 Release URL로 연결합니다.
+
+현재 Release:
+
+```text
+https://github.com/hmviewer/bj-txt/releases/tag/v1.0.0
+```
