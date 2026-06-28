@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="타임라인 정리기">
+  <rect width="64" height="64" rx="14" fill="#1f8ea3"/>
+  <path d="M20 16v32M20 23h26M20 33h20M20 43h15" stroke="#f6efdf" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="46" cy="23" r="4.5" fill="#f6efdf"/>
+  <circle cx="40" cy="33" r="4.5" fill="#f6efdf"/>
+  <circle cx="35" cy="43" r="4.5" fill="#f6efdf"/>
+</svg>
