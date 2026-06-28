@@ -3,7 +3,7 @@ import type { InitialMatchMode, ParsedLogLine, SearchResult, SearchScope, Search
 import { parseLogText } from "@/features/logParser/logParser";
 import { parseSearchTerms, searchLogs } from "@/features/search/searchEngine";
 import { SAMPLE_LOG } from "@/features/sample/sampleLog";
-import { buildCopyText, buildCsvContent, buildDateStamp, buildFileSafeKeyword, buildTxtContent } from "@/features/export/exporters";
+import { buildCopyText, buildCsvContent, buildDateStamp, buildFileSafeKeyword, buildTimelineLine, buildTxtContent } from "@/features/export/exporters";
 import { getRecentSearches, saveRecentSearch } from "@/features/recentSearch/recentSearch";
 import "./styles/app.css";
 
@@ -119,7 +119,7 @@ export const App = () => {
   };
 
   const copyOne = async (result: SearchResult) => {
-    await window.timelineApi.copyText(result.raw);
+    await window.timelineApi.copyText(buildTimelineLine(result));
     setSelected(result);
     showToast("한 줄을 복사했습니다.");
   };

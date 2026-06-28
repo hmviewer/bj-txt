@@ -1,6 +1,10 @@
 import type { SearchResult } from "@/types/log";
 
-export const buildCopyText = (results: SearchResult[]) => results.map((result) => result.raw).join("\n");
+const TRAILING_MESSAGE_PATTERN = /\s+\|\s*"[^"]*"\s*$/;
+
+export const buildTimelineLine = (result: SearchResult) => result.raw.replace(TRAILING_MESSAGE_PATTERN, "");
+
+export const buildCopyText = (results: SearchResult[]) => results.map(buildTimelineLine).join("\n");
 
 export const buildTxtContent = buildCopyText;
 
