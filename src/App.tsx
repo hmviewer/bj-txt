@@ -32,6 +32,7 @@ export const App = () => {
   const [lastTerms, setLastTerms] = useState<SearchTerm[]>([]);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const [recent, setRecent] = useState<string[]>(() => getRecentSearches());
+  const [isDraggingFile, setIsDraggingFile] = useState(false);
   const [toast, setToast] = useState("");
   const [error, setError] = useState("");
 
@@ -67,12 +68,13 @@ export const App = () => {
 
   const onDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const file = event.dataTransfer.files[0] as File & { path?: string };
-    if (!file?.path) {
-      setError("드롭한 파일 경로를 읽지 못했습니다.");
+    setIsDraggingFile(false);
+    const file = event.dataTransfer.files[0];
+    if (!file) {
+      setError("드롭한 파일을 읽지 못했습니다.");
       return;
     }
-    const result = await window.timelineApi.readDroppedTextFile(file.path);
+    const result = await window.timelineApi.readDroppedFile(file);
     if (result.error || !result.text) {
       setError(result.error ?? "파일을 불러오지 못했습니다.");
       return;
@@ -161,8 +163,13 @@ export const App = () => {
           <button className="secondaryWide" onClick={loadSample}>샘플 로그 불러오기</button>
 
           <div
-            className="dropZone"
-            onDragOver={(event) => event.preventDefault()}
+            className={isDraggingFile ? "dropZone dragging" : "dropZone"}
+            onDragEnter={() => setIsDraggingFile(true)}
+            onDragOver={(event) => {
+              event.preventDefault();
+              event.dataTransfer.dropEffect = "copy";
+            }}
+            onDragLeave={() => setIsDraggingFile(false)}
             onDrop={onDrop}
           >
             <TimelineIcon />

@@ -1,6 +1,6 @@
 {
   "name": "timeline-organizer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "별풍선/후원 로그 TXT 파일에서 BJ 언급 타임라인을 정리하는 Windows/macOS 데스크톱 앱",
   "main": "out/main/main.js",
   "author": "Codex",

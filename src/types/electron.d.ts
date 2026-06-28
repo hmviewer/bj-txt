@@ -18,6 +18,7 @@ declare global {
     timelineApi: {
       openTextFile: () => Promise<DesktopFileResult>;
       readDroppedTextFile: (filePath: string) => Promise<DesktopFileResult>;
+      readDroppedFile: (file: File) => Promise<DesktopFileResult>;
       saveTextFile: (defaultFileName: string, content: string) => Promise<SaveResult>;
       saveCsvFile: (defaultFileName: string, content: string) => Promise<SaveResult>;
       copyText: (content: string) => Promise<boolean>;
