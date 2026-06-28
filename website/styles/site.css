@@ -311,6 +311,19 @@ h3 {
   text-transform: uppercase;
 }
 
+.downloadNote {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.downloadNote code {
+  color: var(--text);
+  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-size: 12px;
+}
+
 .releaseLink {
   color: var(--muted);
   font-size: 14px;

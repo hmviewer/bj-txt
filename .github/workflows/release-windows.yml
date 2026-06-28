@@ -107,6 +107,7 @@ jobs:
             - 전체 복사, TXT 저장, CSV 내보내기 지원
             - Windows 10/11 x64 설치 파일 포함
             - macOS Apple Silicon DMG/ZIP 포함
-            - macOS 빌드는 서명/공증 전 배포본입니다.
+            - macOS 빌드는 ad-hoc 서명 적용, Apple Developer 공증 전 배포본입니다.
+            - macOS에서 손상됨 경고가 보이면 앱을 Applications로 옮긴 뒤 `xattr -cr "/Applications/타임라인 정리기.app"`을 실행하세요.
           files: |
             release-assets/**/*
