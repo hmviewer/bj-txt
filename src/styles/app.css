@@ -213,6 +213,13 @@ textarea:focus {
   font-weight: 760;
 }
 
+.optionHint {
+  margin: 8px 2px 0;
+  color: #8f897a;
+  font-size: 12px;
+  line-height: 1.48;
+}
+
 .recentBox h2 {
   margin: 0 0 8px;
 }

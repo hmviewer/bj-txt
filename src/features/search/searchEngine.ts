@@ -1,5 +1,9 @@
-import type { MatchLabel, ParsedLogLine, SearchResult, SearchScope, SearchTerm, SortOrder } from "@/types/log";
+import type { InitialMatchMode, MatchLabel, ParsedLogLine, SearchResult, SearchScope, SearchTerm, SortOrder } from "@/types/log";
 import { isInitialSearchTerm, toChoseongText } from "./choseong";
+
+type SearchOptions = {
+  initialMatchMode?: InitialMatchMode;
+};
 
 export const parseSearchTerms = (input: string): SearchTerm[] => {
   const seen = new Set<string>();
@@ -25,9 +29,13 @@ export const searchLogs = (
   lines: ParsedLogLine[],
   terms: SearchTerm[],
   scope: SearchScope,
-  sortOrder: SortOrder
+  sortOrder: SortOrder,
+  options: SearchOptions = {}
 ): SearchResult[] => {
   if (terms.length === 0) return [];
+
+  const initialMatchMode = options.initialMatchMode ?? "candidate";
+  const hasTextTerm = terms.some((term) => !term.isInitial);
 
   const results = lines.flatMap((line) => {
     const target = scope === "message" ? line.message : line.raw;
@@ -35,7 +43,7 @@ export const searchLogs = (
 
     const normalizedTarget = target.toLocaleLowerCase("ko-KR");
     const targetInitials = toChoseongText(target);
-    const matches = terms.flatMap<MatchLabel>((term) => {
+    const allMatches = terms.flatMap<MatchLabel>((term) => {
       const matchedByText = normalizedTarget.includes(term.normalized);
       const matchedByInitial = term.isInitial && targetInitials.includes(term.raw);
 
@@ -46,6 +54,9 @@ export const searchLogs = (
       if (matchedByInitial) return [{ term: term.raw, type: "initial" as const }];
       return [];
     });
+    const hasTextMatch = allMatches.some((match) => match.type === "text");
+    const hasOnlyGuardedInitialMatch = initialMatchMode === "guarded" && hasTextTerm && !hasTextMatch;
+    const matches = hasOnlyGuardedInitialMatch ? [] : allMatches;
 
     if (matches.length === 0) return [];
     return [{ ...line, matches }];

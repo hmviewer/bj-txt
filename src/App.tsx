@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { ParsedLogLine, SearchResult, SearchScope, SearchTerm, SortOrder } from "@/types/log";
+import type { InitialMatchMode, ParsedLogLine, SearchResult, SearchScope, SearchTerm, SortOrder } from "@/types/log";
 import { parseLogText } from "@/features/logParser/logParser";
 import { parseSearchTerms, searchLogs } from "@/features/search/searchEngine";
 import { SAMPLE_LOG } from "@/features/sample/sampleLog";
@@ -26,6 +26,7 @@ export const App = () => {
   const [loadedFile, setLoadedFile] = useState<LoadedFile | null>(null);
   const [query, setQuery] = useState("달리, ㄷㄹ");
   const [scope, setScope] = useState<SearchScope>("message");
+  const [initialMatchMode, setInitialMatchMode] = useState<InitialMatchMode>("guarded");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [lastTerms, setLastTerms] = useState<SearchTerm[]>([]);
@@ -88,7 +89,12 @@ export const App = () => {
       setError("검색할 BJ 이름이나 별칭을 입력하세요.");
       return;
     }
-    const found = searchLogs(loadedFile.lines, terms, scope, sortOrder);
+    const onlyInitialTerms = terms.every((term) => term.isInitial);
+    if (initialMatchMode === "guarded" && onlyInitialTerms) {
+      setError("정밀 초성 모드에서는 실제 별칭도 함께 입력하세요. 예: 달리, ㄷㄹ");
+      return;
+    }
+    const found = searchLogs(loadedFile.lines, terms, scope, sortOrder, { initialMatchMode });
     setResults(found);
     setSelected(found[0] ?? null);
     setLastTerms(terms);
@@ -191,6 +197,20 @@ export const App = () => {
               <button className={scope === "message" ? "active" : ""} onClick={() => setScope("message")}>메시지 내용만 검색</button>
               <button className={scope === "full" ? "active" : ""} onClick={() => setScope("full")}>원문 전체 검색</button>
             </div>
+            <p className="optionHint">
+              기본값은 따옴표 안 메시지만 검색합니다. 원문 전체 검색은 후원자/태그까지 포함되어 오탐이 생길 수 있습니다.
+            </p>
+          </section>
+
+          <section className="segmented">
+            <span>초성 처리</span>
+            <div>
+              <button className={initialMatchMode === "guarded" ? "active" : ""} onClick={() => setInitialMatchMode("guarded")}>정밀 초성</button>
+              <button className={initialMatchMode === "candidate" ? "active" : ""} onClick={() => setInitialMatchMode("candidate")}>초성 후보</button>
+            </div>
+            <p className="optionHint">
+              정밀 초성은 `달리, ㄷㄹ`처럼 실제 별칭과 초성을 함께 입력할 때 초성만 맞는 관련 없는 메시지를 제외합니다.
+            </p>
           </section>
 
           <section className="segmented">
@@ -218,7 +238,7 @@ export const App = () => {
             <div>
               <h2>검색 결과 {results.length.toLocaleString()}건</h2>
               <p>
-                검색 별칭: {lastTerms.length ? lastTerms.map((term) => term.raw).join(", ") : "없음"} · 검색 범위: {scope === "message" ? "메시지 내용" : "원문 전체"} · 정렬: {sortOrder === "asc" ? "시간 오름차순" : "시간 내림차순"}
+                검색 별칭: {lastTerms.length ? lastTerms.map((term) => term.raw).join(", ") : "없음"} · 검색 범위: {scope === "message" ? "메시지 내용" : "원문 전체"} · 초성: {initialMatchMode === "guarded" ? "정밀" : "후보"} · 정렬: {sortOrder === "asc" ? "시간 오름차순" : "시간 내림차순"}
               </p>
             </div>
             <div className="actionButtons">

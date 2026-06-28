@@ -12,6 +12,7 @@ export type ParsedLogLine = {
 
 export type SearchScope = "message" | "full";
 export type SortOrder = "asc" | "desc";
+export type InitialMatchMode = "guarded" | "candidate";
 
 export type SearchTerm = {
   raw: string;

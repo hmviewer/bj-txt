@@ -70,6 +70,22 @@ describe("searchEngine", () => {
     expect(results.find((result) => result.message === "달리")?.matches.map((match) => match.term)).toEqual(["달리", "ㄷㄹ"]);
   });
 
+  it("can use initials as guarded support for a text alias", () => {
+    const text = [
+      '[ 00:00:01 ] a 1 | "달리"',
+      '[ 00:00:02 ] a 1 | "덜렁"',
+      '[ 00:00:03 ] a 1 | "달리누나"',
+      '[ 00:00:04 ] 덜렁팬 1 | "어푸"'
+    ].join("\n");
+
+    const results = searchLogs(parseLogText(text), parseSearchTerms("달리, ㄷㄹ"), "message", "asc", {
+      initialMatchMode: "guarded"
+    });
+
+    expect(results.map((result) => result.message)).toEqual(["달리", "달리누나"]);
+    expect(results.find((result) => result.message === "달리")?.matches.map((match) => match.term)).toEqual(["달리", "ㄷㄹ"]);
+  });
+
   it("sorts by time ascending and descending", () => {
     const lines = parseLogText(SAMPLE_LOG);
     const asc = searchLogs(lines, parseSearchTerms("달리"), "message", "asc");
